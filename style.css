@@ -1,0 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 30px;
+  background: linear-gradient(270deg, #ff5733, #33ffcc, #335bff);
+  background-size: 600% 600%;
+  animation: ranglar 10s ease infinite;
+}
+
+/* Fon ranglari harakatlanadigan animatsiya */
+@keyframes ranglar {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+#balance {
+position: absolute; bottom: 685px; left: 10px;
+    background-color: none;
+    font-weight: bold;
+    color: green;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+
+#claim {
+position: absolute; bottom: 400px; left: 146px;
+    background-color: yellow;
+    color: red;
+    padding: 10px 15px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#bonus {
+position: absolute; bottom: 350px; left: 126px;
+    background-color: yellow;
+    color: red;
+    padding: 10px 15px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#withdraw  {
+position: absolute; bottom: 695px; left: 260px;
+    background-color: yellow;
+    color: red;
+    padding: 10px 15px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#balance_name {
+position: absolute; bottom: 685px; left: 90px;
+    background-color: none;
+    font-weight: bold;
+    color: green;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+
+#text {
+  position: fixed;       /* absolute o'rniga fixed qo'yiladi */
+  bottom: 400px;         /* ekran pastidan masofa */
+  left: 90px;            /* chapdan masofa */
+  width: 200px;          /* input eni */
+  height: 40px;          /* input balandligi */
+  font-size: 16px;       /* matn o'lchami */
+  border: 2px solid #0084ff; /* chegara rangi */
+  border-radius: 8px;    /* yumaloq burchaklar */
+  padding: 5px 10px;     /* ichki bo'sh joy */
+  z-index: 1000;         /* boshqa elementlar ustida turishi uchun */
+}
+
+#text1 {
+position: absolute; bottom: 350px; left: 90px;
+  width: 200px;          /* Input eni */
+  height: 40px;          /* Input balandligi */
+  font-size: 16px;       /* Matn o‘lchami */
+  border: 2px solid #0084ff; /* Chegara rangi */
+  border-radius: 8px;    /* Yumaloq burchaklar */
+  padding: 5px 10px;     /* Ichki bo‘sh joy */
+}
+
+#withdraw1 {
+position: absolute; bottom: 300px; left: 90px;
+  width: 200px;          /* Input eni */
+  height: 40px;          /* Input balandligi */
+  font-size: 16px;       /* Matn o‘lchami */
+  border: 2px solid #0084ff; /* Chegara rangi */
+  border-radius: 8px;    /* Yumaloq burchaklar */
+  padding: 5px 10px;     /* Ichki bo‘sh joy */
+}
