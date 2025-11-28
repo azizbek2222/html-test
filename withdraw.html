@@ -56,7 +56,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, get, child, update, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, get, child, update, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDIeG8dVbm0Yk7FR1hPzrBoD7rgDKWAFoY",
@@ -73,48 +73,58 @@
     const db = getDatabase(app);
 
     let deviceId = localStorage.getItem("deviceId");
+    if(!deviceId){
+        alert("Iltimos, avval index.html ni oching.");
+        location.href="index.html";
+    }
 
     function sendWithdraw() {
-        let payeer = document.getElementById("payeer").value;
-        let amount = parseFloat(document.getElementById("amount").value);
+        const payeer = document.getElementById("payeer").value.trim();
+        const amount = parseFloat(document.getElementById("amount").value);
 
-        if (!payeer.startsWith("P")) {
+        if(!payeer || !payeer.startsWith("P") || payeer.length < 7){
             alert("Payeer hisob noto'g'ri!");
             return;
         }
 
-        if (amount < 1) {
+        if(isNaN(amount) || amount < 1){
             alert("Minimal yechish: 1₽");
             return;
         }
 
-        // Avval balansni olamiz
         get(child(ref(db), "users/" + deviceId + "/balance")).then((snapshot) => {
-            if (!snapshot.exists()) return;
+            if(!snapshot.exists()){
+                alert("Balans topilmadi!");
+                return;
+            }
 
             let balance = snapshot.val();
 
-            if (balance < amount) {
+            if(balance < amount){
                 alert("Balans yetarli emas!");
                 return;
             }
 
-            // Balansdan ayiramiz
+            // Balansdan ayirish
             update(ref(db, "users/" + deviceId), {
                 balance: balance - amount
             });
 
-            // Admin panelga so‘rov yuboramiz
+            // Admin so‘rovini yuborish
             const newReq = push(ref(db, "withdraw_requests"));
             set(newReq, {
                 user: deviceId,
                 payeer: payeer,
                 amount: amount,
-                status: "pending"
+                status: "pending",
+                timestamp: Date.now()
             });
 
             alert("So‘rov yuborildi!");
             location.href = "index.html";
+        }).catch(err=>{
+            console.log("Xato:", err);
+            alert("Xatolik yuz berdi!");
         });
     }
 </script>
