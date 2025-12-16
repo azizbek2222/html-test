@@ -79,7 +79,16 @@ if(runId){
   document.getElementById("runResult").style.display="block";
 
   db.ref("codes/"+runId).once("value").then(snap=>{
-    document.getElementById("runResult").innerHTML=snap.val();
+    var files = snap.val(); // Object: {filename: code}
+    for(var fname in files){
+      var iframe = document.createElement("iframe");
+      iframe.style.width="100%";
+      iframe.style.height="500px";
+      iframe.style.border="1px solid #fff";
+      // Har bir fayl alohida sahifa sifatida iframe ichida ochiladi
+      iframe.srcdoc = files[fname];
+      document.getElementById("runResult").appendChild(iframe);
+    }
   });
 }
 
@@ -91,37 +100,38 @@ function save(){
   }
 
   var files = document.getElementById("files").files;
+  var fileCodes = {}; // Barcha fayllarni saqlash uchun object
+
   if(files.length === 0){
-    // Faqat textarea kodi
     var codeArea = document.getElementById("code").value;
-    saveSingleFile(name, codeArea);
+    fileCodes["index"] = codeArea;
+    saveToFirebase(name, fileCodes);
   } else {
-    // Har bir fayl alohida saqlansin
+    let readCount = 0;
     for(let i=0;i<files.length;i++){
       let file = files[i];
       let reader = new FileReader();
       reader.onload = function(e){
-        let ext = file.name.split('.').pop().toLowerCase();
-        let codeContent = e.target.result;
-
-        // Har bir fayl uchun alohida Firebase yozish
-        saveSingleFile(file.name.replace(/\.[^/.]+$/,""), codeContent);
+        let fname = file.name.replace(/\.[^/.]+$/,"");
+        fileCodes[fname] = e.target.result;
+        readCount++;
+        if(readCount === files.length){
+          saveToFirebase(name, fileCodes);
+        }
       }
       reader.readAsText(file);
     }
   }
 }
 
-function saveSingleFile(name, code){
+function saveToFirebase(name, filesObj){
   var randomStr = Math.random().toString(36).substring(2,8);
   var uniqueId = name + "-" + randomStr;
 
-  db.ref("codes/"+uniqueId).set(code);
+  db.ref("codes/"+uniqueId).set(filesObj);
 
   var link = location.origin + location.pathname + "?run=" + encodeURIComponent(uniqueId);
-  var linkEl = document.createElement("p");
-  linkEl.innerHTML = `<b>${name}</b> uchun link: <a href="${link}" target="_blank">${link}</a>`;
-  document.getElementById("link").appendChild(linkEl);
+  document.getElementById("link").innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
 }
 </script>
 
